@@ -75,8 +75,7 @@ public:
 			for (int y = 0; y<num_particles_height; y++)
 			{
 				Vec3 pos = Vec3(width * (x / (float)num_particles_width),
-					-height * (y / (float)num_particles_height),
-					0);
+					0, -height * (y / (float)num_particles_height));
 				particles[y*num_particles_width + x] = Particle(pos); // insert particle in column x at y'th row
 			}
 		}

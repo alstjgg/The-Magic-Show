@@ -1,16 +1,16 @@
 ﻿  Sample.cpp
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\particle.h(39): warning C4305: '인수': 'double'에서 'const float'(으)로 잘립니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\particle.h(39): warning C4305: '인수': 'double'에서 'const float'(으)로 잘립니다.
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.13.26128\include\gl.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\cloth.h(136): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\cloth.h(186): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\cloth.h(195): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\cloth.h(207): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\cloth.h(236): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\sample.cpp(75): warning C4838: 'double'에서 'GLfloat'(으)로의 변환에는 축소 변환이 필요합니다.
-c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\sample\sample.cpp(76): warning C4838: 'double'에서 'GLfloat'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\cloth.h(134): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\cloth.h(182): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\cloth.h(189): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\cloth.h(199): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\cloth.h(226): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\sample.cpp(73): warning C4838: 'double'에서 'GLfloat'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\13579\desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\the-magic-show\sample\sample\sample.cpp(74): warning C4838: 'double'에서 'GLfloat'(으)로의 변환에는 축소 변환이 필요합니다.
   코드를 생성하고 있습니다.
-  3 of 176 functions ( 1.7%) were compiled, the rest were copied from previous compilation.
+  1 of 175 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
-  Sample.vcxproj -> C:\Users\13579\Desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\sample\Release\Sample.exe
+  Sample.vcxproj -> C:\Users\13579\Desktop\수업자료\컴퓨터그래픽스\과제\텀 프로젝트\The-Magic-Show\sample\Release\Sample.exe
