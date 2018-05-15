@@ -6,7 +6,7 @@
 
 class Cloth
 {
-private:
+public:
 
 	int num_particles_width; // number of particles in "width" direction
 	int num_particles_height; // number of particles in "height" direction
@@ -15,7 +15,7 @@ private:
 	std::vector<Particle> particles; // all particles that are part of this cloth
 	std::vector<Constraint> constraints; // all constraints between particles as part of this cloth
 
-	Particle* getParticle(int x, int y) { return &particles[y*num_particles_width + x]; }
+	Particle* getParticle(int x, int z) { return &particles[z*num_particles_width + x]; }
 	void makeConstraint(Particle *p1, Particle *p2) { constraints.push_back(Constraint(p1, p2)); }
 
 
@@ -61,62 +61,60 @@ private:
 		glNormal3fv((GLfloat *) &(p3->getNormal().Normalize()));
 		glVertex3fv((GLfloat *) &(p3->getPos()));
 	}
-
-public:
-
 	/* This is a important constructor for the entire system of particles and constraints*/
 	Cloth(float width, float height, int num_particles_width, int num_particles_height) : num_particles_width(num_particles_width), num_particles_height(num_particles_height)
 	{
 		particles.resize(num_particles_width*num_particles_height); //I am essentially using this vector as an array with room for num_particles_width*num_particles_height particles
 
 																	// creating particles in a grid of particles from (0,0,0) to (width,-height,0)
-		for (int x = 0; x<num_particles_width; x++)
+		for (int x = 0; x < num_particles_width; x++)
 		{
-			for (int y = 0; y<num_particles_height; y++)
+			for (int z = 0; z < num_particles_height; z++)
 			{
 				VECTOR3D pos = VECTOR3D(width * (x / (float)num_particles_width),
-					-height * (y / (float)num_particles_height),
-				0);
+					0, height * (z / (float)num_particles_height));
 
-				particles[y*num_particles_width + x] = Particle(pos); // insert particle in column x at y'th row
+				particles[z*num_particles_width + x] = Particle(pos); // insert particle in column x at z'th row
 			}
 		}
 
 		// Connecting immediate neighbor particles with constraints (distance 1 and sqrt(2) in the grid)
-		for (int x = 0; x<num_particles_width; x++)
+		for (int x = 0; x < num_particles_width; x++)
 		{
-			for (int y = 0; y<num_particles_height; y++)
+			for (int z = 0; z < num_particles_height; z++)
 			{
-				if (x<num_particles_width - 1) makeConstraint(getParticle(x, y), getParticle(x + 1, y));
-				if (y<num_particles_height - 1) makeConstraint(getParticle(x, y), getParticle(x, y + 1));
-				if (x<num_particles_width - 1 && y<num_particles_height - 1) makeConstraint(getParticle(x, y), getParticle(x + 1, y + 1));
-				if (x<num_particles_width - 1 && y<num_particles_height - 1) makeConstraint(getParticle(x + 1, y), getParticle(x, y + 1));
+				if (x < num_particles_width - 1) makeConstraint(getParticle(x, z), getParticle(x + 1, z));
+				if (z < num_particles_height - 1) makeConstraint(getParticle(x, z), getParticle(x, z + 1));
+				if (x < num_particles_width - 1 && z < num_particles_height - 1) makeConstraint(getParticle(x, z), getParticle(x + 1, z + 1));
+				if (x < num_particles_width - 1 && z < num_particles_height - 1) makeConstraint(getParticle(x + 1, z), getParticle(x, z + 1));
 			}
 		}
 
 
 		// Connecting secondary neighbors with constraints (distance 2 and sqrt(4) in the grid)
-		for (int x = 0; x<num_particles_width; x++)
+		for (int x = 0; x < num_particles_width; x++)
 		{
-			for (int y = 0; y<num_particles_height; y++)
+			for (int z = 0; z < num_particles_height; z++)
 			{
-				if (x<num_particles_width - 2) makeConstraint(getParticle(x, y), getParticle(x + 2, y));
-				if (y<num_particles_height - 2) makeConstraint(getParticle(x, y), getParticle(x, y + 2));
-				if (x<num_particles_width - 2 && y<num_particles_height - 2) makeConstraint(getParticle(x, y), getParticle(x + 2, y + 2));
-				if (x<num_particles_width - 2 && y<num_particles_height - 2) makeConstraint(getParticle(x + 2, y), getParticle(x, y + 2));
+				if (x < num_particles_width - 2) makeConstraint(getParticle(x, z), getParticle(x + 2, z));
+				if (z < num_particles_height - 2) makeConstraint(getParticle(x, z), getParticle(x, z + 2));
+				if (x < num_particles_width - 2 && z < num_particles_height - 2) makeConstraint(getParticle(x, z), getParticle(x + 2, z + 2));
+				if (x < num_particles_width - 2 && z < num_particles_height - 2) makeConstraint(getParticle(x + 2, z), getParticle(x, z + 2));
 			}
 		}
 
 
-		// making the upper left most three and right most three particles unmovable
-		for (int i = 0; i<3; i++)
+		// making the corner particles unmovable
+		for (int i = 0; i < 3; i++)
 		{
-			getParticle(0 + i, 0)->offsetPos(VECTOR3D(0.5, 0.0, 0.0)); // moving the particle a bit towards the center, to make it hang more natural - because I like it ;)
 			getParticle(0 + i, 0)->makeUnmovable();
-
-			getParticle(num_particles_width - 1 - i, 0)->offsetPos(VECTOR3D(-0.5, 0.0, 0.0)); // moving the particle a bit towards the center, to make it hang more natural - because I like it ;)
 			getParticle(num_particles_width - 1 - i, 0)->makeUnmovable();
+			getParticle(0, num_particles_height - 1 - i)->makeUnmovable();
+			getParticle(num_particles_width - 1, num_particles_height - 1 - i)->makeUnmovable();
 		}
+		
+		//getParticle(num_particles_width / 2, num_particles_height / 2)->makeUnmovable();
+
 	}
 
 	/* drawing the cloth as a smooth shaded (and colored according to column) OpenGL triangular mesh
@@ -132,16 +130,15 @@ public:
 	void drawShaded()
 	{
 		// reset normals (which where written to last frame)
-		std::vector<Particle>::iterator particle;
-		for(int i=0;i<particles.size();i++)
+		for (int i = 0; i < particles.size(); i++)
 		{
 			particles[i].resetNormal();
 		}
 
 		//create smooth per particle normals by adding up all the (hard) triangle normals that each particle is part of
-		for (int x = 0; x<num_particles_width - 1; x++)
+		for (int x = 0; x < num_particles_width - 1; x++)
 		{
-			for (int y = 0; y<num_particles_height - 1; y++)
+			for (int y = 0; y < num_particles_height - 1; y++)
 			{
 				VECTOR3D normal = calcTriangleNormal(getParticle(x + 1, y), getParticle(x, y), getParticle(x, y + 1));
 				getParticle(x + 1, y)->addToNormal(normal);
@@ -156,9 +153,9 @@ public:
 		}
 
 		glBegin(GL_TRIANGLES);
-		for (int x = 0; x<num_particles_width - 1; x++)
+		for (int x = 0; x < num_particles_width - 1; x++)
 		{
-			for (int y = 0; y<num_particles_height - 1; y++)
+			for (int y = 0; y < num_particles_height - 1; y++)
 			{
 				VECTOR3D color(0, 0, 0);
 				if (x % 2) // red and white color is interleaved according to which column number
@@ -178,17 +175,15 @@ public:
 	*/
 	void timeStep()
 	{
-		std::vector<Constraint>::iterator constraint;
-		for (int i = 0; i<CONSTRAINT_ITERATIONS; i++) // iterate over all constraints several times
+		for (int i = 0; i < CONSTRAINT_ITERATIONS; i++) // iterate over all constraints several times
 		{
-			for(int j=0;j<constraints.size();j++)
+			for (int j = 0; j < constraints.size(); j++)
 			{
 				constraints[j].satisfyConstraint();
 			}
 		}
 
-		std::vector<Particle>::iterator particle;
-		for(int i=0;i<particles.size();i++)
+		for (int i = 0; i < particles.size(); i++)
 		{
 			particles[i].timeStep(); // calculate the position of each particle at the next time step.
 		}
@@ -197,8 +192,7 @@ public:
 	/* used to add gravity (or any other arbitrary vector) to all particles*/
 	void addForce(const VECTOR3D direction)
 	{
-		std::vector<Particle>::iterator particle;
-		for(int i=0;i<particles.size();i++)
+		for (int i = 0; i < particles.size(); i++)
 		{
 			particles[i].addForce(direction); // add the forces to each particle
 		}
@@ -208,9 +202,9 @@ public:
 	/* used to add wind forces to all particles, is added for each triangle since the final force is proportional to the triangle area as seen from the wind direction*/
 	void windForce(const VECTOR3D direction)
 	{
-		for (int x = 0; x<num_particles_width - 1; x++)
+		for (int x = 0; x < num_particles_width - 1; x++)
 		{
-			for (int y = 0; y<num_particles_height - 1; y++)
+			for (int y = 0; y < num_particles_height - 1; y++)
 			{
 				addWindForcesForTriangle(getParticle(x + 1, y), getParticle(x, y), getParticle(x, y + 1), direction);
 				addWindForcesForTriangle(getParticle(x + 1, y + 1), getParticle(x + 1, y), getParticle(x, y + 1), direction);
@@ -224,14 +218,27 @@ public:
 	*/
 	void ballCollision(const VECTOR3D center, const float radius)
 	{
-		std::vector<Particle>::iterator particle;
-		for(int i=0;i<particles.size();i++)
+		for (int i = 0; i < particles.size(); i++)
 		{
 			VECTOR3D v = particles[i].getPos() - center;
 			float l = v.Magnitude();
 			if (v.Magnitude() < radius) // if the particle is inside the ball
 			{
 				particles[i].offsetPos(v.Normalize()*(radius - l)); // project the particle to the surface of the ball
+			}
+		}
+	}
+
+	void planeCollision(const float position)
+	{
+		for (int i = 0; i < particles.size(); i++)
+		{
+			float diffy = particles[i].getPos().y - (position+0.1);
+			
+			if (diffy < 0)
+			{
+				VECTOR3D correction = VECTOR3D(0, 1, 0);
+				particles[i].offsetPos(correction*(-diffy));
 			}
 		}
 	}

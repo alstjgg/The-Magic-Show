@@ -1,23 +1,21 @@
-﻿  Cloth.cpp
-  Constraint.cpp
-  main.cpp
+﻿  main.cpp
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\particle.h(39): warning C4305: '인수': 'double'에서 'const float'(으)로 잘립니다.
 c:\program files (x86)\windows kits\10\include\10.0.16299.0\um\gl\gl.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(137): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(185): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(192): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(202): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(229): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(73): warning C4838: 'double'에서 'GLfloat'(으)로의 변환에는 축소 변환이 필요합니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(73): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(74): warning C4838: 'double'에서 'GLfloat'(으)로의 변환에는 축소 변환이 필요합니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(74): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(92): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(94): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-  Particle.cpp
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(133): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(180): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(186): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(195): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(221): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(234): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(236): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\init.h(15): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\init.h(15): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\init.h(16): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\init.h(16): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(79): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
   코드를 생성하고 있습니다.
-  170 of 184 functions (92.4%) were compiled, the rest were copied from previous compilation.
-    3 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  0 of 182 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   Sample.vcxproj -> C:\Users\tjrkd\Desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\Term Project\The-Magic-Show\sample\Release\Sample.exe

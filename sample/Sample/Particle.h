@@ -50,6 +50,8 @@ public:
 
 	void makeUnmovable() { movable = false; }
 
+	void makemovable() { movable = true; }
+
 	void addToNormal(VECTOR3D normal)
 	{
 		accumulated_normal += normal.Normalize();
