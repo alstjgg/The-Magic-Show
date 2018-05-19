@@ -37,7 +37,7 @@ void Initialize(int argc, char** argv)
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(800, 800);
-	glutCreateWindow("Cloth simulation tutorial");
+	glutCreateWindow("Cloth simulation");
 	glFrontFace(GL_CCW);
 
 	// depth test

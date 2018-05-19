@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include "Constraint.h"
+#include "Triangle.h"
 #include <gl/GL.h>
 #include <gl/glut.h> 
+
 
 class Cloth
 {
@@ -14,67 +16,54 @@ public:
 
 	std::vector<Particle> particles; // all particles that are part of this cloth
 	std::vector<Constraint> constraints; // all constraints between particles as part of this cloth
+	std::vector<Triangle> triangles;
 
-	Particle* getParticle(int x, int z) { return &particles[z*num_particles_width + x]; }
-	void makeConstraint(Particle *p1, Particle *p2) { constraints.push_back(Constraint(p1, p2)); }
+	Particle* getParticle(int x, int z) 
+	{ return &particles[z*num_particles_width + x]; }
+	
+	void makeConstraint(Particle *p1, Particle *p2) 
+	{ constraints.push_back(Constraint(p1, p2)); }
+
+	void makeTriangle(Particle *p1, Particle *p2, Particle *p3)
+	{ triangles.push_back(Triangle(p1, p2, p3)); }
 
 
-	/* A private method used by drawShaded() and addWindForcesForTriangle() to retrieve the
-	normal vector of the triangle defined by the position of the particles p1, p2, and p3.
-	The magnitude of the normal vector is equal to the area of the parallelogram defined by p1, p2 and p3
-	*/
-	VECTOR3D calcTriangleNormal(Particle *p1, Particle *p2, Particle *p3)
+
+	void addWindForcesForTriangle(Triangle T, const VECTOR3D direction)
 	{
-		VECTOR3D pos1 = p1->getPos();
-		VECTOR3D pos2 = p2->getPos();
-		VECTOR3D pos3 = p3->getPos();
-
-		VECTOR3D v1 = pos2 - pos1;
-		VECTOR3D v2 = pos3 - pos1;
-
-		return v1.CrossProduct(v2);
-	}
-
-	/* A private method used by windForce() to calcualte the wind force for a single triangle
-	defined by p1,p2,p3*/
-	void addWindForcesForTriangle(Particle *p1, Particle *p2, Particle *p3, const VECTOR3D direction)
-	{
-		VECTOR3D normal = calcTriangleNormal(p1, p2, p3);
+		VECTOR3D normal = T.normal;
 		VECTOR3D d = normal.Normalize();
 		VECTOR3D force = normal*(d.InnerProduct(direction));
-		p1->addForce(force);
-		p2->addForce(force);
-		p3->addForce(force);
+		T.p[0]->addForce(force);
+		T.p[1]->addForce(force);
+		T.p[2]->addForce(force);
 	}
 
-	/* A private method used by drawShaded(), that draws a single triangle p1,p2,p3 with a color*/
-	void drawTriangle(Particle *p1, Particle *p2, Particle *p3, const VECTOR3D color)
+	void drawTriangle(Triangle T, const VECTOR3D color)
 	{
 		glColor3fv((GLfloat*)&color);
 
-		glNormal3fv((GLfloat *) &(p1->getNormal().Normalize()));
-		glVertex3fv((GLfloat *) &(p1->getPos()));
+		glNormal3fv((GLfloat *) &(T.p[0]->getNormal().Normalize()));
+		glVertex3fv((GLfloat *) &(T.p[0]->getPos()));
 
-		glNormal3fv((GLfloat *) &(p2->getNormal().Normalize()));
-		glVertex3fv((GLfloat *) &(p2->getPos()));
+		glNormal3fv((GLfloat *) &(T.p[1]->getNormal().Normalize()));
+		glVertex3fv((GLfloat *) &(T.p[1]->getPos()));
 
-		glNormal3fv((GLfloat *) &(p3->getNormal().Normalize()));
-		glVertex3fv((GLfloat *) &(p3->getPos()));
+		glNormal3fv((GLfloat *) &(T.p[2]->getNormal().Normalize()));
+		glVertex3fv((GLfloat *) &(T.p[2]->getPos()));
 	}
-	/* This is a important constructor for the entire system of particles and constraints*/
+
 	Cloth(float width, float height, int num_particles_width, int num_particles_height) : num_particles_width(num_particles_width), num_particles_height(num_particles_height)
 	{
-		particles.resize(num_particles_width*num_particles_height); //I am essentially using this vector as an array with room for num_particles_width*num_particles_height particles
+		particles.resize(num_particles_width*num_particles_height);
 
-																	// creating particles in a grid of particles from (0,0,0) to (width,-height,0)
+		//particle »ý¼º
 		for (int x = 0; x < num_particles_width; x++)
 		{
 			for (int z = 0; z < num_particles_height; z++)
 			{
-				VECTOR3D pos = VECTOR3D(width * (x / (float)num_particles_width),
-					0, height * (z / (float)num_particles_height));
-
-				particles[z*num_particles_width + x] = Particle(pos); // insert particle in column x at z'th row
+				VECTOR3D pos = VECTOR3D(width * (x / (float)num_particles_width), 0, height * (z / (float)num_particles_height));
+				particles[z*num_particles_width + x] = Particle(pos);
 			}
 		}
 
@@ -90,11 +79,10 @@ public:
 			}
 		}
 
-
-		// Connecting secondary neighbors with constraints (distance 2 and sqrt(4) in the grid)
-		for (int x = 0; x < num_particles_width; x++)
+		// Connecting secondary neighbors with constraints (distance 2 and sqrt(8) in the grid)
+		for (int x = 0; x < num_particles_width-1; x++)
 		{
-			for (int z = 0; z < num_particles_height; z++)
+			for (int z = 0; z < num_particles_height-1; z++)
 			{
 				if (x < num_particles_width - 2) makeConstraint(getParticle(x, z), getParticle(x + 2, z));
 				if (z < num_particles_height - 2) makeConstraint(getParticle(x, z), getParticle(x, z + 2));
@@ -103,29 +91,37 @@ public:
 			}
 		}
 
+		// Make triangle
+		/*
+			(x,y)	*--* (x+1,y)
+					| /|
+					|/ |
+			(x,y+1) *--* (x+1,y+1)
+		*/
+		for (int x = 0; x < num_particles_width - 1; x++)
+		{
+			for (int z = 0; z < num_particles_height - 1; z++)
+			{
+				makeTriangle(getParticle(x, z), getParticle(x, z + 1), getParticle(x + 1, z));
+				makeTriangle(getParticle(x + 1, z + 1), getParticle(x + 1, z), getParticle(x, z + 1));
+			}
+		}
 
-		// making the corner particles unmovable
+		// Make unmovable particles
 		for (int i = 0; i < 3; i++)
 		{
 			getParticle(0 + i, 0)->makeUnmovable();
 			getParticle(num_particles_width - 1 - i, 0)->makeUnmovable();
 			getParticle(0, num_particles_height - 1 - i)->makeUnmovable();
 			getParticle(num_particles_width - 1, num_particles_height - 1 - i)->makeUnmovable();
+			getParticle(num_particles_width / 2, num_particles_height / 2)->makeUnmovable();
 		}
 		
 		//getParticle(num_particles_width / 2, num_particles_height / 2)->makeUnmovable();
-
 	}
 
 	/* drawing the cloth as a smooth shaded (and colored according to column) OpenGL triangular mesh
 	Called from the display() method
-	The cloth is seen as consisting of triangles for four particles in the grid as follows:
-
-	(x,y)   *--* (x+1,y)
-	| /|
-	|/ |
-	(x,y+1) *--* (x+1,y+1)
-
 	*/
 	void drawShaded()
 	{
@@ -136,36 +132,28 @@ public:
 		}
 
 		//create smooth per particle normals by adding up all the (hard) triangle normals that each particle is part of
-		for (int x = 0; x < num_particles_width - 1; x++)
+		for (int i = 0; i < triangles.size(); i++)
 		{
-			for (int y = 0; y < num_particles_height - 1; y++)
-			{
-				VECTOR3D normal = calcTriangleNormal(getParticle(x + 1, y), getParticle(x, y), getParticle(x, y + 1));
-				getParticle(x + 1, y)->addToNormal(normal);
-				getParticle(x, y)->addToNormal(normal);
-				getParticle(x, y + 1)->addToNormal(normal);
-
-				normal = calcTriangleNormal(getParticle(x + 1, y + 1), getParticle(x + 1, y), getParticle(x, y + 1));
-				getParticle(x + 1, y + 1)->addToNormal(normal);
-				getParticle(x + 1, y)->addToNormal(normal);
-				getParticle(x, y + 1)->addToNormal(normal);
-			}
+			triangles[i].calcTriangleNormal();
+			triangles[i].p[0]->addToNormal(triangles[i].normal);
+			triangles[i].p[1]->addToNormal(triangles[i].normal);
+			triangles[i].p[2]->addToNormal(triangles[i].normal);
 		}
-
+		
 		glBegin(GL_TRIANGLES);
-		for (int x = 0; x < num_particles_width - 1; x++)
+		for (int i = 0; i < triangles.size(); i=i+2)
 		{
-			for (int y = 0; y < num_particles_height - 1; y++)
-			{
-				VECTOR3D color(0, 0, 0);
-				if (x % 2) // red and white color is interleaved according to which column number
-					color = VECTOR3D(0.6f, 0.2f, 0.2f);
-				else
-					color = VECTOR3D(1.0f, 1.0f, 1.0f);
-
-				drawTriangle(getParticle(x + 1, y), getParticle(x, y), getParticle(x, y + 1), color);
-				drawTriangle(getParticle(x + 1, y + 1), getParticle(x + 1, y), getParticle(x, y + 1), color);
-			}
+			
+			VECTOR3D color(0, 0, 0);
+			if (i % 4) // red and white color is interleaved according to which column number
+				color = VECTOR3D(0.6f, 0.2f, 0.2f);
+			else
+				color = VECTOR3D(1.0f, 1.0f, 1.0f);
+			
+			
+			//VECTOR3D color(0.6, 0.6, 0.6);
+			drawTriangle(triangles[i], color);
+			drawTriangle(triangles[i + 1], color);
 		}
 		glEnd();
 	}
@@ -202,14 +190,8 @@ public:
 	/* used to add wind forces to all particles, is added for each triangle since the final force is proportional to the triangle area as seen from the wind direction*/
 	void windForce(const VECTOR3D direction)
 	{
-		for (int x = 0; x < num_particles_width - 1; x++)
-		{
-			for (int y = 0; y < num_particles_height - 1; y++)
-			{
-				addWindForcesForTriangle(getParticle(x + 1, y), getParticle(x, y), getParticle(x, y + 1), direction);
-				addWindForcesForTriangle(getParticle(x + 1, y + 1), getParticle(x + 1, y), getParticle(x, y + 1), direction);
-			}
-		}
+		for (int i = 0; i < triangles.size(); i++)
+			addWindForcesForTriangle(triangles[i], direction);
 	}
 
 	/* used to detect and resolve the collision of the cloth with the ball.
@@ -233,12 +215,106 @@ public:
 	{
 		for (int i = 0; i < particles.size(); i++)
 		{
-			float diffy = particles[i].getPos().y - (position+0.1);
+			float diffy = particles[i].getPos().y - (position+0.2);
 			
 			if (diffy < 0)
 			{
 				VECTOR3D correction = VECTOR3D(0, 1, 0);
 				particles[i].offsetPos(correction*(-diffy));
+			}
+		}
+	}
+
+	bool neighborTriangle(Triangle T1, Triangle T2)
+	{
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+				if (T1.p[i] == T2.p[j])
+					return true;
+			
+		return false;
+	}
+
+	bool IntersectPoint(Particle *p1, Particle *p2, Triangle T, VECTOR3D &point)
+	{
+		VECTOR3D pos1 = p1->getPos();
+		VECTOR3D pos2 = p2->getPos();
+		VECTOR3D normal = T.normal;
+		T.calcD();
+
+		float val1 = pos1.InnerProduct(normal) - T.D;
+		float val2 = pos2.InnerProduct(normal) - T.D;
+
+		if (val1 * val2 < 0)
+		{
+			setIntersectPoint(p1, p2, T, point);
+			return true;
+		}
+		else if (val1*val2 == 0)
+		{
+			point = (val1 == 0) ? pos1 : pos2;
+			return true;
+		}
+		return false;
+	}
+
+	void setIntersectPoint(Particle *p1, Particle *p2, Triangle T, VECTOR3D &point)
+	{
+		VECTOR3D pos1 = p1->getPos();
+		VECTOR3D pos2 = p2->getPos();
+		VECTOR3D dir = pos2 - pos1;
+		dir = dir.Normalize();
+		float first = T.D - pos1.InnerProduct(T.normal);
+		float second = T.normal.InnerProduct(dir);
+
+		point = pos1 + dir * (first / second);
+	}
+
+	bool PointinPolygon(VECTOR3D &p, Triangle T)
+	{
+		VECTOR3D vertex[3];
+		for (int i = 0; i < 3; i++)
+			vertex[i] = T.p[i]->getPos() - p; //vector from p to triangle vertex
+	
+		float angle = 0;
+		for (int i = 0; i < 3; i++)
+			angle += acos(vertex[i % 3].InnerProduct(vertex[(i + 1) % 3]) / (vertex[i % 3].Magnitude() * vertex[(i+1) % 3].Magnitude()));
+		
+		if (angle >= 2 * PI)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool PolygonIntersect(Triangle T1, Triangle T2)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			VECTOR3D point;
+			if (IntersectPoint(T2.p[i % 3], T2.p[(i + 1) % 3], T1, point))
+				return PointinPolygon(point, T1);
+		}
+		return false;
+	}
+
+	void RawSelfCollision()
+	{
+		for (int i = 0; i < triangles.size(); i++)
+		{
+			for (int j = 0; j < triangles.size(); j++)
+			{
+				if (!(neighborTriangle(triangles[i], triangles[j])) && PolygonIntersect(triangles[i], triangles[j]))
+				{
+					for (int k = 0; k < 3; k++)
+					{
+						/*
+						TO DO
+						collisino resolve...
+						*/
+					}
+					return;
+				}
 			}
 		}
 	}

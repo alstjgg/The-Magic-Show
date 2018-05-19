@@ -154,6 +154,7 @@
     <ClInclude Include="Init.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="VECTOR3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
