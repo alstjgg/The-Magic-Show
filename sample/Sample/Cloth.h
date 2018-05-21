@@ -16,7 +16,7 @@ public:
 
 	std::vector<Particle> particles; // all particles that are part of this cloth
 	std::vector<Constraint> constraints; // all constraints between particles as part of this cloth
-	std::vector<Triangle> triangles;
+	std::vector<Triangle> triangles; //  there are 2 * (num_particles_width-1) * (num_particles_height-1) triangles
 
 	Particle* getParticle(int x, int z) 
 	{ return &particles[z*num_particles_width + x]; }
@@ -26,8 +26,6 @@ public:
 
 	void makeTriangle(Particle *p1, Particle *p2, Particle *p3)
 	{ triangles.push_back(Triangle(p1, p2, p3)); }
-
-
 
 	void addWindForcesForTriangle(Triangle T, const VECTOR3D direction)
 	{
@@ -120,18 +118,18 @@ public:
 		//getParticle(num_particles_width / 2, num_particles_height / 2)->makeUnmovable();
 	}
 
-	/* drawing the cloth as a smooth shaded (and colored according to column) OpenGL triangular mesh
+	/* drawing the cloth as a smooth shaded OpenGL triangular mesh
 	Called from the display() method
 	*/
 	void drawShaded()
 	{
-		// reset normals (which where written to last frame)
+		/* reset vertex normals (which where written to last frame) */
 		for (int i = 0; i < particles.size(); i++)
 		{
 			particles[i].resetNormal();
 		}
 
-		//create smooth per particle normals by adding up all the (hard) triangle normals that each particle is part of
+		/* set vertex normal */
 		for (int i = 0; i < triangles.size(); i++)
 		{
 			triangles[i].calcTriangleNormal();
@@ -140,18 +138,19 @@ public:
 			triangles[i].p[2]->addToNormal(triangles[i].normal);
 		}
 		
+		/* finally, draw triangles */
 		glBegin(GL_TRIANGLES);
 		for (int i = 0; i < triangles.size(); i=i+2)
 		{
-			
+			/*
 			VECTOR3D color(0, 0, 0);
 			if (i % 4) // red and white color is interleaved according to which column number
 				color = VECTOR3D(0.6f, 0.2f, 0.2f);
 			else
 				color = VECTOR3D(1.0f, 1.0f, 1.0f);
+			*/
 			
-			
-			//VECTOR3D color(0.6, 0.6, 0.6);
+			VECTOR3D color(0.6, 0.2, 0.2);
 			drawTriangle(triangles[i], color);
 			drawTriangle(triangles[i + 1], color);
 		}
@@ -177,7 +176,7 @@ public:
 		}
 	}
 
-	/* used to add gravity (or any other arbitrary vector) to all particles*/
+	/* add force to particle */
 	void addForce(const VECTOR3D direction)
 	{
 		for (int i = 0; i < particles.size(); i++)
@@ -187,17 +186,13 @@ public:
 
 	}
 
-	/* used to add wind forces to all particles, is added for each triangle since the final force is proportional to the triangle area as seen from the wind direction*/
+	/* add force to Triangle */
 	void windForce(const VECTOR3D direction)
 	{
 		for (int i = 0; i < triangles.size(); i++)
 			addWindForcesForTriangle(triangles[i], direction);
 	}
 
-	/* used to detect and resolve the collision of the cloth with the ball.
-	This is based on a very simples scheme where the position of each particle is simply compared to the sphere and corrected.
-	This also means that the sphere can "slip through" if the ball is small enough compared to the distance in the grid bewteen particles
-	*/
 	void ballCollision(const VECTOR3D center, const float radius)
 	{
 		for (int i = 0; i < particles.size(); i++)
@@ -287,6 +282,7 @@ public:
 		return false;
 	}
 
+	/* check whether triangle T1 intersect with triangle T2 */
 	bool PolygonIntersect(Triangle T1, Triangle T2)
 	{
 		for (int i = 0; i < 3; i++)
@@ -298,6 +294,7 @@ public:
 		return false;
 	}
 
+	/* unoptimized collision detection. time complexity = O(n^2) */
 	void RawSelfCollision()
 	{
 		for (int i = 0; i < triangles.size(); i++)
@@ -308,6 +305,11 @@ public:
 				{
 					for (int k = 0; k < 3; k++)
 					{
+						triangles[i].calcRepulsive();
+						triangles[j].calcRepulsive();
+						triangles[i].p[k]->offsetPos(triangles[i].repulsive * 1);
+						triangles[j].p[k]->offsetPos(triangles[j].repulsive * 1);
+					
 						/*
 						TO DO
 						collisino resolve...

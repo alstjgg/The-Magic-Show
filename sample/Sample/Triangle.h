@@ -2,11 +2,13 @@
 #include "VECTOR3D.h"
 #include "Particle.h"
 #define PI 3.141592
+
 class Triangle
 {
 public:
 	Particle * p[3];
 	VECTOR3D normal;
+	VECTOR3D repulsive;
 	float D = 0;
 	
 	Triangle(Particle *p1, Particle *p2, Particle *p3)
@@ -36,6 +38,15 @@ public:
 	void calcD()
 	{
 		D = normal.InnerProduct(p[0]->getPos());
+	}
+
+	void calcRepulsive()
+	{
+		repulsive = VECTOR3D(0, 0, 0);
+		for (int i = 0; i < 3; i++)
+		{
+			repulsive += p[i]->getOldPos() - p[i]->getPos();
+		}
 	}
 };
 

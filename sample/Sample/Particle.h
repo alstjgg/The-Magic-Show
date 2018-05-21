@@ -2,7 +2,7 @@
 #include "VECTOR3D.h"
 
 /* Some physics constants */
-#define SELF_FRICTION 0.1
+#define SELF_FRICTION 0.05  //damping
 #define TIME_STEPSIZE 0.5 * 0.5 // 한 프레임당 얼마만큼의 시간변화를 표현할 것인가
 
 
