@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include "Constraint.h"
-#include "Triangle.h"
+#include "BoundingBox.h"
+
 #include <gl/GL.h>
 #include <gl/glut.h> 
 
@@ -9,7 +9,7 @@
 class Cloth
 {
 public:
-
+	Node* Htree = NULL;
 	int num_particles_width; // number of particles in "width" direction
 	int num_particles_height; // number of particles in "height" direction
 							  // total number of particles is num_particles_width*num_particles_height
@@ -104,6 +104,8 @@ public:
 				makeTriangle(getParticle(x + 1, z + 1), getParticle(x + 1, z), getParticle(x, z + 1));
 			}
 		}
+
+		BuildTree(Htree ,0, num_particles_width, num_particles_height, num_particles_width, Hdir);
 
 		// Make unmovable particles
 		for (int i = 0; i < 3; i++)
@@ -230,6 +232,7 @@ public:
 		return false;
 	}
 
+	/*
 	bool IntersectPoint(Particle *p1, Particle *p2, Triangle T, VECTOR3D &point)
 	{
 		VECTOR3D pos1 = p1->getPos();
@@ -282,7 +285,6 @@ public:
 		return false;
 	}
 
-	/* check whether triangle T1 intersect with triangle T2 */
 	bool PolygonIntersect(Triangle T1, Triangle T2)
 	{
 		for (int i = 0; i < 3; i++)
@@ -293,31 +295,35 @@ public:
 		}
 		return false;
 	}
+	*/
+	
 
-	/* unoptimized collision detection. time complexity = O(n^2) */
+	/* unoptimized collision detection */
 	void RawSelfCollision()
 	{
 		for (int i = 0; i < triangles.size(); i++)
 		{
 			for (int j = 0; j < triangles.size(); j++)
 			{
-				if (!(neighborTriangle(triangles[i], triangles[j])) && PolygonIntersect(triangles[i], triangles[j]))
+				if (!(neighborTriangle(triangles[i], triangles[j])))
 				{
-					for (int k = 0; k < 3; k++)
-					{
-						triangles[i].calcRepulsive();
-						triangles[j].calcRepulsive();
-						triangles[i].p[k]->offsetPos(triangles[i].repulsive * 1);
-						triangles[j].p[k]->offsetPos(triangles[j].repulsive * 1);
-					
-						/*
-						TO DO
-						collisino resolve...
-						*/
-					}
-					return;
+					Pair B1, B2;
+					B1 = makeBoundingBoxforTriangle(triangles[i]);
+					B2 = makeBoundingBoxforTriangle(triangles[j]);
+					if(BoundingBoxIntersect(B1, B2))
+						resolveSelfCollision(B1, B2, triangles[i], triangles[j]);
 				}
 			}
 		}
 	}
+
+	/* optimized collision detection using hierarchical structure */
+	void HierachialSelfCollision()
+	{
+		for (int i = 0; i < triangles.size(); i++)
+		{
+			
+		}
+	}
 };
+

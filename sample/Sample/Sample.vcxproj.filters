@@ -47,5 +47,11 @@
     <ClInclude Include="Triangle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

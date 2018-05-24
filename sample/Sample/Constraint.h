@@ -1,7 +1,7 @@
 #pragma once
 #include "Particle.h"
-#define elasticity 0.3 //0~1
-#define CONSTRAINT_ITERATIONS 15 // how many iterations of constraint satisfaction each frame (more is rigid, less is soft)
+#define elasticity 0.5 //0~1
+#define CONSTRAINT_ITERATIONS 10 // how many iterations of constraint satisfaction each frame (more is rigid, less is soft)
 
 class Constraint
 {

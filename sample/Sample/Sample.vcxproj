@@ -149,11 +149,13 @@
     <ClCompile Include="VECTOR3D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Cloth.h" />
     <ClInclude Include="Constraint.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="Tree.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="VECTOR3D.h" />
   </ItemGroup>

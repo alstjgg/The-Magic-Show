@@ -1,5 +1,4 @@
 #pragma once
-#include "VECTOR3D.h"
 #include "Particle.h"
 #define PI 3.141592
 
