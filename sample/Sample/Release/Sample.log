@@ -12,9 +12,10 @@ c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\ter
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(200): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(213): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(215): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(304): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(306): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(321): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(323): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(340): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\cloth.h(349): warning C4101: 'exception' :참조되지 않은 지역 변수입니다.
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\init.h(16): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\init.h(16): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\init.h(17): warning C4838: 'double'에서 'float'(으)로의 변환에는 축소 변환이 필요합니다.
@@ -24,8 +25,8 @@ c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\ter
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(95): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
 c:\users\tjrkd\desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\term project\the-magic-show\sample\sample\main.cpp(95): warning C4305: '인수': 'double'에서 'const float'(으)로 잘립니다.
   코드를 생성하고 있습니다.
-  4 of 245 functions ( 1.6%) were compiled, the rest were copied from previous compilation.
+  3 of 251 functions ( 1.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    4 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   Sample.vcxproj -> C:\Users\tjrkd\Desktop\서강욱\3학년\전공\컴퓨터그래픽스\과제\Term Project\The-Magic-Show\sample\Release\Sample.exe

@@ -105,7 +105,7 @@ public:
 			}
 		}
 
-		BuildTree(Htree ,0, num_particles_width, num_particles_height, num_particles_width, Hdir);
+		BuildTree(&Htree , 0, num_particles_width, num_particles_height, num_particles_width, Hdir);
 
 		// Make unmovable particles
 		for (int i = 0; i < 3; i++)
@@ -297,8 +297,25 @@ public:
 	}
 	*/
 	
+	void DFS(Node* root, Pair B, Pair& resultB, int& index)
+	{
+		Pair currentB = makeBoundingBoxforNode(root, triangles);
+		if (BoundingBoxIntersect(B, currentB))
+		{
+			/* leaf node */
+			if (root->data != -1)
+			{
+				resultB = currentB;
+				index = root->data;
+				throw 0; //unwinding stack
+			}
+			DFS(root->left, B, resultB, index);
+			DFS(root->right, B, resultB, index);
+		}
+		return; //pruning
+	}
 
-	/* unoptimized collision detection */
+	/* unoptimized self collision detection. search all pairs of triangles. */
 	void RawSelfCollision()
 	{
 		for (int i = 0; i < triangles.size(); i++)
@@ -317,12 +334,22 @@ public:
 		}
 	}
 
-	/* optimized collision detection using hierarchical structure */
+	/* optimized self collision detection using hierarchical structure */
 	void HierachialSelfCollision()
 	{
 		for (int i = 0; i < triangles.size(); i++)
 		{
-			
+			Pair B, resultB;
+			int index;
+			B = makeBoundingBoxforTriangle(triangles[i]);
+			try
+			{
+				DFS(Htree, B, resultB, index);
+			}
+			catch (int exception)
+			{
+				//resolveSelfCollision(B, resultB, triangles[i], triangles[index]);
+			}
 		}
 	}
 };
