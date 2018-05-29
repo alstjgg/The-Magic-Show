@@ -18,14 +18,20 @@ public:
 	std::vector<Constraint> constraints; // all constraints between particles as part of this cloth
 	std::vector<Triangle> triangles; //  there are 2 * (num_particles_width-1) * (num_particles_height-1) triangles
 
-	Particle* getParticle(int x, int z) 
-	{ return &particles[z*num_particles_width + x]; }
-	
-	void makeConstraint(Particle *p1, Particle *p2) 
-	{ constraints.push_back(Constraint(p1, p2)); }
+	Particle* getParticle(int x, int z)
+	{
+		return &particles[z*num_particles_width + x];
+	}
+
+	void makeConstraint(Particle *p1, Particle *p2)
+	{
+		constraints.push_back(Constraint(p1, p2));
+	}
 
 	void makeTriangle(Particle *p1, Particle *p2, Particle *p3)
-	{ triangles.push_back(Triangle(p1, p2, p3)); }
+	{
+		triangles.push_back(Triangle(p1, p2, p3));
+	}
 
 	void addWindForcesForTriangle(Triangle T, const VECTOR3D direction)
 	{
@@ -41,14 +47,14 @@ public:
 	{
 		glColor3fv((GLfloat*)&color);
 
-		glNormal3fv((GLfloat *) &(T.p[0]->getNormal().Normalize()));
-		glVertex3fv((GLfloat *) &(T.p[0]->getPos()));
+		glNormal3fv((GLfloat *)&(T.p[0]->getNormal().Normalize()));
+		glVertex3fv((GLfloat *)&(T.p[0]->getPos()));
 
-		glNormal3fv((GLfloat *) &(T.p[1]->getNormal().Normalize()));
-		glVertex3fv((GLfloat *) &(T.p[1]->getPos()));
+		glNormal3fv((GLfloat *)&(T.p[1]->getNormal().Normalize()));
+		glVertex3fv((GLfloat *)&(T.p[1]->getPos()));
 
-		glNormal3fv((GLfloat *) &(T.p[2]->getNormal().Normalize()));
-		glVertex3fv((GLfloat *) &(T.p[2]->getPos()));
+		glNormal3fv((GLfloat *)&(T.p[2]->getNormal().Normalize()));
+		glVertex3fv((GLfloat *)&(T.p[2]->getPos()));
 	}
 
 	Cloth(float width, float height, int num_particles_width, int num_particles_height) : num_particles_width(num_particles_width), num_particles_height(num_particles_height)
@@ -78,9 +84,9 @@ public:
 		}
 
 		// Connecting secondary neighbors with constraints (distance 2 and sqrt(8) in the grid)
-		for (int x = 0; x < num_particles_width-1; x++)
+		for (int x = 0; x < num_particles_width - 1; x++)
 		{
-			for (int z = 0; z < num_particles_height-1; z++)
+			for (int z = 0; z < num_particles_height - 1; z++)
 			{
 				if (x < num_particles_width - 2) makeConstraint(getParticle(x, z), getParticle(x + 2, z));
 				if (z < num_particles_height - 2) makeConstraint(getParticle(x, z), getParticle(x, z + 2));
@@ -105,7 +111,7 @@ public:
 			}
 		}
 
-		BuildTree(&Htree , 0, num_particles_width, num_particles_height, num_particles_width, Hdir);
+		BuildTree(&Htree, 0, num_particles_width, num_particles_height, num_particles_width, Hdir);
 
 		// Make unmovable particles
 		for (int i = 0; i < 3; i++)
@@ -116,7 +122,7 @@ public:
 			getParticle(num_particles_width - 1, num_particles_height - 1 - i)->makeUnmovable();
 			getParticle(num_particles_width / 2, num_particles_height / 2)->makeUnmovable();
 		}
-		
+
 		//getParticle(num_particles_width / 2, num_particles_height / 2)->makeUnmovable();
 	}
 
@@ -139,10 +145,10 @@ public:
 			triangles[i].p[1]->addToNormal(triangles[i].normal);
 			triangles[i].p[2]->addToNormal(triangles[i].normal);
 		}
-		
+
 		/* finally, draw triangles */
 		glBegin(GL_TRIANGLES);
-		for (int i = 0; i < triangles.size(); i=i+2)
+		for (int i = 0; i < triangles.size(); i = i + 2)
 		{
 			/*
 			VECTOR3D color(0, 0, 0);
@@ -151,7 +157,7 @@ public:
 			else
 				color = VECTOR3D(1.0f, 1.0f, 1.0f);
 			*/
-			
+
 			VECTOR3D color(0.6, 0.2, 0.2);
 			drawTriangle(triangles[i], color);
 			drawTriangle(triangles[i + 1], color);
@@ -212,8 +218,8 @@ public:
 	{
 		for (int i = 0; i < particles.size(); i++)
 		{
-			float diffy = particles[i].getPos().y - (position+0.2);
-			
+			float diffy = particles[i].getPos().y - (position + 0.2);
+
 			if (diffy < 0)
 			{
 				VECTOR3D correction = VECTOR3D(0, 1, 0);
@@ -228,7 +234,7 @@ public:
 			for (int j = 0; j < 3; j++)
 				if (T1.p[i] == T2.p[j])
 					return true;
-			
+
 		return false;
 	}
 
@@ -273,11 +279,11 @@ public:
 		VECTOR3D vertex[3];
 		for (int i = 0; i < 3; i++)
 			vertex[i] = T.p[i]->getPos() - p; //vector from p to triangle vertex
-	
+
 		float angle = 0;
 		for (int i = 0; i < 3; i++)
 			angle += acos(vertex[i % 3].InnerProduct(vertex[(i + 1) % 3]) / (vertex[i % 3].Magnitude() * vertex[(i+1) % 3].Magnitude()));
-		
+
 		if (angle >= 2 * PI)
 		{
 			return true;
@@ -296,7 +302,7 @@ public:
 		return false;
 	}
 	*/
-	
+
 	void DFS(Node* root, Pair B, Pair& resultB, int& index)
 	{
 		Pair currentB = makeBoundingBoxforNode(root, triangles);
@@ -328,12 +334,12 @@ public:
 					B1 = makeBoundingBoxforTriangle(triangles[i]);
 					B2 = makeBoundingBoxforTriangle(triangles[j]);
 					if (BoundingBoxIntersect(B1, B2))
-						resolveSelfCollision(B1, B2, triangles[i], triangles[j]);
+						//resolveSelfCollision(B1, B2, triangles[i], triangles[j]);
+						printf("intersects %d %d \n",i,j);
 				}
 			}
 		}
 	}
-
 	/* optimized self collision detection using hierarchical structure */
 	void HierachialSelfCollision()
 	{
@@ -353,4 +359,3 @@ public:
 		}
 	}
 };
-

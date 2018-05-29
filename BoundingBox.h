@@ -112,10 +112,10 @@ Pair makeBoundingBoxforTriangle(Triangle& T)
 
 bool BoundingBoxIntersect(Pair B1, Pair B2)
 {	
-	bool noOverlap = B1.maximum.x < B2.minimum.x || B1.minimum.x > B2.maximum.x ||
-					 B1.maximum.y < B2.minimum.y || B1.minimum.y > B2.maximum.y ||
-		             B1.maximum.z < B2.minimum.z || B1.minimum.z > B2.minimum.z;
-	return !noOverlap;
+	bool noOverlap = (B1.maximum.x < B2.minimum.x) || (B1.minimum.x > B2.maximum.x) ||
+					 (B1.maximum.y < B2.minimum.y) || (B1.minimum.y > B2.maximum.y) ||
+		             (B1.maximum.z < B2.minimum.z) || (B1.minimum.z > B2.minimum.z);
+	return !(noOverlap);
 }
 
 void resolveSelfCollision(Pair B1, Pair B2, Triangle& T1, Triangle& T2)
@@ -205,5 +205,24 @@ void resolveSelfCollision(Pair B1, Pair B2, Triangle& T1, Triangle& T2)
 	float min_time = min(x_time, min(y_time, z_time));
 	VECTOR3D collisionPlane(x_collisionPlane*(min_time == x_time), y_collisionPlane*(min_time == y_time), z_collisionPlane*(min_time == z_time));
 	//collisionPlane vector3D contain info about axis and which point should it cross
+	VECTOR3D NormalizedCollisionPlane = collisionPlane.Normalize();
 
+	for (int i = 0; i < 3; i++) {
+
+		if ((T1.p[i]->getOldPos().InnerProduct(NormalizedCollisionPlane) - collisionPlane.Magnitude()) *
+			(T1.p[i]->getPos().InnerProduct(NormalizedCollisionPlane) - collisionPlane.Magnitude()) < 0) {//collisionplane is between old_pos and pos 
+
+			
+
+			T1.p[i]->setPos(T1.p[i]->getPos() - collisionPlane.Normalize() * T1.p[i]->getPos().InnerProduct(collisionPlane.Normalize()) + collisionPlane);
+		}
+
+
+		if ((T2.p[i]->getOldPos().InnerProduct(NormalizedCollisionPlane) - collisionPlane.Magnitude()) *
+			(T2.p[i]->getPos().InnerProduct(NormalizedCollisionPlane) - collisionPlane.Magnitude()) < 0) {//collisionplane is between old_pos and pos 
+
+			T2.p[i]->setPos(T2.p[i]->getPos() - collisionPlane.Normalize() * T2.p[i]->getPos().InnerProduct(collisionPlane.Normalize()) + collisionPlane);
+		}
+	}
+	
 }
